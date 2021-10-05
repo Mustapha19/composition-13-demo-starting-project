@@ -1,2 +1,2 @@
-# install the dependencies 
-## npm install
+## install the dependencies 
+`npm install
