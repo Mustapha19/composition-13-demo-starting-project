@@ -1,13 +1,11 @@
 <template>
   <main>
-    <user-list :users="activeUsers" @list-projects="selectUser"></user-list>
+    <user-list :users="activeUsers"></user-list>
     <projects-list :user="selectedUser"></projects-list>
   </main>
 </template>
 
 <script>
-import USER_DATA from './dummy-data.js';
-
 import UserList from './components/users/UserList.vue';
 import ProjectsList from './components/projects/ProjectsList.vue';
 
@@ -16,11 +14,14 @@ export default {
     UserList,
     ProjectsList,
   },
-  data() {
-    return {
-      selectedUser: null,
-      activeUsers: USER_DATA,
-    };
+  computed:{
+    activeUsers(){
+      return this.$store.getters.UserList;
+    },
+    selectedUser(){
+      return this.$store.getters.getSelectedUser;
+    }
+
   },
   methods: {
     selectUser(uid) {
@@ -48,20 +49,20 @@ main {
 
 button {
   font: inherit;
-  border: 1px solid #00006b;
+  border: 1px solid #00446b;
   background-color: transparent;
-  color: #00006b;
+  color: #02354d;
   padding: 0.5rem 1.5rem;
   cursor: pointer;
   margin: 0.5rem 0.5rem 0.5rem 0;
 }
 button:hover,
 button:active {
-  background-color: #efefff;
+  background-color: #eff9ff;
 }
 
 button.selected {
-  background-color: #00006b;
+  background-color: #13496d;
   color: white;
 }
 </style>

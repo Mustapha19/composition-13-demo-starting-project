@@ -12,7 +12,7 @@ export default {
 
 <style scoped>
 li {
-  background-color: #00006b;
+  background-color: #00446b;
   color: white;
   padding: 0.5rem;
   margin: 1rem 0;

@@ -1,7 +1,7 @@
 <template>
   <base-container v-if="user">
     <h2>{{ user.fullName }}: Projects</h2>
-    <base-search v-if="hasProjects" @search="updateSearch" :search-term="enteredSearchTerm"></base-search>
+    <base-search v-if="hasProjects" id="projects" :search-term="projectEnteredSearch"></base-search>
     <ul v-if="hasProjects">
       <project-item v-for="prj in availableProjects" :key="prj.id" :title="prj.title"></project-item>
     </ul>
@@ -20,41 +20,31 @@ export default {
     ProjectItem,
   },
   props: ['user'],
-  data() {
-    return {
-      enteredSearchTerm: '',
-      activeSearchTerm: '',
-    };
-  },
   computed: {
-    hasProjects() {
-      return this.user.projects && this.availableProjects.length > 0;
-    },
+    projectActiveSearch(){return this.$store.getters.getProjectActiveSearch;},
+    projectEnteredSearch(){return this.$store.getters.getProjectEnteredSearch;},
+    hasProjects() {return this.user.projects.length>0;},
+    hasAvailableProjects() {return this.availableProjects.length > 0;},
     availableProjects() {
-      if (this.activeSearchTerm) {
+      if (this.projectActiveSearch) {
         return this.user.projects.filter((prj) =>
-          prj.title.toLowerCase().includes(this.activeSearchTerm.toLowerCase())
-         
+          prj.title.toLowerCase().includes(this.projectActiveSearch.toLowerCase())
         );
       }
       return this.user.projects;
     },
   },
-  methods: {
-    updateSearch(val) {
-      this.enteredSearchTerm = val;
-    },
-  },
   watch: {
-    enteredSearchTerm(val) {
+    projectEnteredSearch(val) {
       setTimeout(() => {
-        if (val === this.enteredSearchTerm) {
-          this.activeSearchTerm = val;
+        if (val === this.projectEnteredSearch) {
+        this.$store.dispatch("projectActiveSearch",val);
         }
-      }, 300);
+      }, 500);
     },
     user() {
-      this.enteredSearchTerm = '';
+      // when the selected user change the projectsList change too
+      this.$store.dispatch("projectEnteredSearch","");
     },
   },
 };

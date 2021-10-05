@@ -1,10 +1,14 @@
 <template>
   <base-container>
     <h2>Active Users</h2>
-    <base-search @search="updateSearch" :search-term="enteredSearchTerm"></base-search>
+    <base-search id="users" :search-term="userEnteredSearch"></base-search>
     <div>
-      <button @click="sort('asc')" :class="{selected: sorting === 'asc'}">Sort Ascending</button>
-      <button @click="sort('desc')" :class="{selected: sorting === 'desc'}">Sort Descending</button>
+      <button @click="sort('asc')" :class="{ selected: sorting === 'asc' }">
+        Sort Ascending
+      </button>
+      <button @click="sort('desc')" :class="{ selected: sorting === 'desc' }">
+        Sort Descending
+      </button>
     </div>
     <ul>
       <user-item
@@ -12,7 +16,6 @@
         :key="user.id"
         :user-name="user.fullName"
         :id="user.id"
-        @list-projects="$emit('list-projects', $event)"
       ></user-item>
     </ul>
   </base-container>
@@ -28,17 +31,23 @@ export default {
   props: ['users'],
   data() {
     return {
-      enteredSearchTerm: '',
-      activeSearchTerm: '',
       sorting: null,
     };
   },
   computed: {
+    userActiveSearch() {
+      return this.$store.getters.getUserActiveSearch;
+    },
+    userEnteredSearch() {
+      return this.$store.getters.getUserEnteredSearch;
+    },
     availableUsers() {
       let users = [];
-      if (this.activeSearchTerm) {
+      if (this.userActiveSearch) {
         users = this.users.filter((usr) =>
-          usr.fullName.toLowerCase().includes(this.activeSearchTerm.toLowerCase())
+          usr.fullName
+            .toLowerCase()
+            .includes(this.userActiveSearch.toLowerCase())
         );
       } else if (this.users) {
         users = this.users;
@@ -63,21 +72,18 @@ export default {
     },
   },
   methods: {
-    updateSearch(val) {
-      this.enteredSearchTerm = val;
-    },
     sort(mode) {
       this.sorting = mode;
     },
   },
   watch: {
-    enteredSearchTerm(val) {
+    userEnteredSearch(val) {
       setTimeout(() => {
-        if (val === this.enteredSearchTerm) {
-          this.activeSearchTerm = val;
+        if (val === this.userEnteredSearch) {
+          this.$store.dispatch('userActiveSearch', val);
         }
-      }, 300);
-    }
+      }, 1000);
+    },
   },
 };
 </script>

@@ -1,16 +1,22 @@
 <template>
   <form>
-    <input type="search" @input="search" :value="searchTerm" placeholder="Filter items" />
+    <input
+      type="search"
+      @input="search"
+      :value="searchTerm"
+      placeholder="Filter items"
+    />
   </form>
 </template>
 
 <script>
 export default {
-  props: ['searchTerm'],
-  emits: ['search'],
+  props: ['searchTerm', 'id'],
   methods: {
     search(event) {
-      this.$emit('search', event.target.value);
+      if (this.id === 'projects')
+        this.$store.dispatch('projectEnteredSearch', event.target.value);
+      else this.$store.dispatch('userEnteredSearch', event.target.value);
     },
   },
 };
@@ -27,7 +33,7 @@ input {
 
 input:focus {
   outline: none;
-  border-color: #00006b;
-  background-color: #eeeeff;
+  border-color: #00446b;
+  background-color: #eef6ff;
 }
 </style>

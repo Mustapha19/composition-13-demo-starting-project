@@ -8,10 +8,10 @@
 <script>
 export default {
   props: ['id', 'userName'],
-  emits: ['list-projects'],
   methods: {
     viewProjects() {
-      this.$emit('list-projects', this.id);
+      console.log('View Projects Method')
+      this.$store.dispatch('selectUser', { id: this.id });
     },
   },
 };
